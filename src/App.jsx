@@ -1,25 +1,27 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [countries, setCountries] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('https://xcountries-backend.azurewebsites.net/all')
-        const data = await response.json()
-        setCountries(data)
-        setLoading(false)
+        const response = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/flag/images"
+        );
+        const data = await response.json();
+        setCountries(data?.data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching data: ', error)
-        setLoading(false)
+        console.error("Error fetching data: ", error);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchCountries()
-  }, [])
+    fetchCountries();
+  }, []);
 
   return (
     <div className="container">
@@ -41,7 +43,7 @@ function App() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
