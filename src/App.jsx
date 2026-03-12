@@ -8,23 +8,44 @@ function App() {
     queryFn: getCountries,
   });
 
-  if (isLoading) return <p>Loading countries...</p>;
-  if (isError) return <p>Error fetching countries</p>;
+  if (isLoading)
+    return (
+      <div className="state-screen">
+        <div className="spinner" />
+        <p>Loading countries…</p>
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="state-screen">
+        <p className="error-msg">⚠ Failed to fetch countries.</p>
+      </div>
+    );
 
   return (
     <div className="container">
-      <h1>Countries</h1>
+      <header className="site-header">
+        <h1>
+          World <span>Flags</span>
+        </h1>
+        <p className="subtitle">{countries?.data?.length ?? 0} countries</p>
+      </header>
+
       {countries?.data?.length === 0 ? (
-        <p>No countries found.</p>
+        <p className="empty-msg">No countries found.</p>
       ) : (
         <div className="countries-grid">
           {countries?.data?.map((country) => (
             <div key={country.name} className="country-card">
-              <img
-                src={country.flag}
-                alt={`Flag of ${country.name}`}
-                className="country-flag"
-              />
+              <div className="flag-wrapper">
+                <img
+                  src={country.flag}
+                  alt={`Flag of ${country.name}`}
+                  className="country-flag"
+                  loading="lazy"
+                />
+              </div>
               <p className="country-name">{country.name}</p>
             </div>
           ))}
