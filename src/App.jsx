@@ -1,36 +1,24 @@
-import { useState, useEffect } from "react";
 import "./App.css";
+import { useQuery } from "@tanstack/react-query";
+import getCountries from "./services/api/countries.endpoints";
 
 function App() {
-  const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: countries, isLoading, isError } = useQuery({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+  });
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch(
-          "https://countriesnow.space/api/v0.1/countries/flag/images"
-        );
-        const data = await response.json();
-        setCountries(data?.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-        setLoading(false);
-      }
-    };
-
-    fetchCountries();
-  }, []);
+  if (isLoading) return <p>Loading countries...</p>;
+  if (isError) return <p>Error fetching countries</p>;
 
   return (
     <div className="container">
       <h1>Countries</h1>
-      {loading ? (
-        <p>Loading countries...</p>
+      {countries?.data?.length === 0 ? (
+        <p>No countries found.</p>
       ) : (
         <div className="countries-grid">
-          {countries.map((country) => (
+          {countries?.data?.map((country) => (
             <div key={country.name} className="country-card">
               <img
                 src={country.flag}
